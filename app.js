@@ -8,7 +8,6 @@ const elements = {
   duringView: document.querySelector("#duringView"),
   beforeView: document.querySelector("#beforeView"),
   currentStepCard: document.querySelector("#currentStepCard"),
-  focusLabel: document.querySelector("#focusLabel"),
   stepTime: document.querySelector("#stepTime"),
   stepTitle: document.querySelector("#stepTitle"),
   stepPlace: document.querySelector("#stepPlace"),
@@ -111,12 +110,11 @@ function renderStep() {
   const type = getStepType(step);
 
   elements.currentStepCard.dataset.stepState = type;
-  elements.focusLabel.textContent = focus.label;
   elements.stepTime.textContent = `${formatDate(step.date)} ${step.start}-${step.end}`;
   elements.stepTitle.textContent = step.title;
   elements.stepPlace.textContent = step.place;
   elements.stepDescription.textContent = step.description;
-  elements.focusBox.innerHTML = `<p>${escapeHtml(focus.text)}</p><small>${escapeHtml(step.miniInfo)}</small>`;
+  elements.focusBox.innerHTML = `<span>${escapeHtml(focus.label)}</span><p>${escapeHtml(focus.text)}</p><small>${escapeHtml(step.miniInfo)}</small>`;
   elements.actionList.innerHTML = step.actions
     .map((action) => `<div class="action-item">${escapeHtml(action)}</div>`)
     .join("");

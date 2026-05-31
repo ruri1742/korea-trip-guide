@@ -23,48 +23,42 @@
 
       <main class="main-content">
         <section class="view active" id="duringView" aria-labelledby="duringTitle">
-          <div class="page-heading">
-            <p class="section-label" id="duringTitle">いま見る情報</p>
-            <p class="support-text">現在時刻に近い予定を表示します。予定がズレたら前後のステップで確認できます。</p>
-          </div>
-
-          <article class="step-card" id="currentStepCard">
-            <div class="step-card__header">
+          <article class="cockpit-card" id="currentStepCard">
+            <div class="cockpit-card__top">
               <div>
-                <p class="status-badge" id="focusLabel"></p>
+                <p class="section-label" id="duringTitle">いま</p>
                 <h2 id="stepTitle"></h2>
               </div>
-              <p class="step-time" id="stepTime"></p>
+              <div class="time-chip" id="stepTime"></div>
             </div>
 
-            <dl class="summary-list">
-              <div>
-                <dt>場所</dt>
-                <dd id="stepPlace"></dd>
-              </div>
-              <div>
-                <dt>やること</dt>
-                <dd id="stepDescription"></dd>
-              </div>
-            </dl>
+            <div class="place-strip">
+              <span>場所</span>
+              <strong id="stepPlace"></strong>
+            </div>
 
-            <div class="notice-box" id="focusBox"></div>
+            <p class="current-task" id="stepDescription"></p>
 
-            <section class="card-section" aria-labelledby="actionsTitle">
+            <div class="cockpit-alert" id="focusBox"></div>
+
+            <section class="cockpit-section" aria-labelledby="actionsTitle">
               <h3 id="actionsTitle">今やること</h3>
               <div class="action-list" id="actionList"></div>
             </section>
 
-            <section class="card-section" aria-labelledby="linksTitle">
-              <h3 id="linksTitle">必要なリンク</h3>
+            <section class="cockpit-section" aria-labelledby="linksTitle">
+              <div class="section-row">
+                <h3 id="linksTitle">必要なリンク</h3>
+                <span>1タップ</span>
+              </div>
               <div class="button-list" id="linkList"></div>
             </section>
-          </article>
 
-          <aside class="next-card" aria-labelledby="nextTitle">
-            <p class="section-label" id="nextTitle">次にやること</p>
-            <p id="nextSummary"></p>
-          </aside>
+            <aside class="next-strip" aria-labelledby="nextTitle">
+              <span id="nextTitle">次にやること</span>
+              <p id="nextSummary"></p>
+            </aside>
+          </article>
 
           <button class="button button--secondary full-width" id="openSchedule" type="button">全体予定を見る</button>
         </section>
