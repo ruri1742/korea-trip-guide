@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>韓国旅行しおり</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Korea Trip</p>
+          <h1>韓国旅行しおり</h1>
+        </div>
+        <button class="help-button" id="openHelp" type="button">困ったとき</button>
+      </header>
+
+      <nav class="mode-switch" aria-label="表示モード">
+        <button class="mode-button active" type="button" data-mode="during">旅行中</button>
+        <button class="mode-button" type="button" data-mode="before">旅行前</button>
+      </nav>
+
+      <main>
+        <section class="view active" id="duringView" aria-labelledby="duringTitle">
+          <div class="now-panel">
+            <div class="now-label-row">
+              <p class="section-label" id="duringTitle">いま</p>
+              <p class="step-time" id="stepTime"></p>
+            </div>
+            <h2 id="stepTitle"></h2>
+            <p class="place" id="stepPlace"></p>
+            <p class="description" id="stepDescription"></p>
+
+            <div class="focus-box" id="focusBox"></div>
+
+            <div class="action-list" id="actionList"></div>
+            <div class="link-list" id="linkList"></div>
+
+            <div class="next-box">
+              <span>次にやること</span>
+              <p id="nextSummary"></p>
+            </div>
+          </div>
+
+          <button class="outline-button schedule-button" id="openSchedule" type="button">全体予定を見る</button>
+        </section>
+
+        <section class="view" id="beforeView" aria-labelledby="beforeTitle">
+          <div class="section-heading">
+            <p class="section-label">旅行前</p>
+            <h2 id="beforeTitle">出発前に見るもの</h2>
+          </div>
+
+          <div class="simple-section">
+            <h3>出発前チェックリスト</h3>
+            <ul class="check-list" id="checklist"></ul>
+          </div>
+
+          <div class="simple-section">
+            <h3>未確定事項</h3>
+            <ul class="plain-list" id="undecidedList"></ul>
+          </div>
+
+          <div class="simple-section">
+            <h3>同行者に共有したいこと</h3>
+            <ul class="plain-list" id="shareList"></ul>
+          </div>
+
+          <div class="simple-section">
+            <h3>チケット・予約リンク</h3>
+            <div class="link-list" id="ticketLinks"></div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="step-nav" aria-label="ステップ操作">
+        <button type="button" id="prevStep">← 前のステップ</button>
+        <button type="button" id="footerSchedule">全体予定</button>
+        <button type="button" id="nextStep">次のステップ →</button>
+      </footer>
+    </div>
+
+    <dialog class="dialog" id="scheduleDialog">
+      <div class="dialog-header">
+        <h2>全体予定</h2>
+        <button class="icon-button" type="button" data-close="scheduleDialog" aria-label="閉じる">×</button>
+      </div>
+      <div class="schedule-list" id="scheduleList"></div>
+    </dialog>
+
+    <dialog class="dialog" id="helpDialog">
+      <div class="dialog-header">
+        <h2>困ったとき</h2>
+        <button class="icon-button" type="button" data-close="helpDialog" aria-label="閉じる">×</button>
+      </div>
+      <div class="help-content">
+        <section>
+          <h3>ホテル住所</h3>
+          <p id="hotelName"></p>
+          <p class="korean-text" id="hotelAddress"></p>
+        </section>
+        <section>
+          <h3>目的地名</h3>
+          <div class="phrase-grid" id="destinations"></div>
+        </section>
+        <section>
+          <h3>よく使う韓国語</h3>
+          <div class="phrase-list" id="phrases"></div>
+        </section>
+        <section>
+          <h3>チケット一覧</h3>
+          <div class="link-list" id="helpTickets"></div>
+        </section>
+        <section>
+          <h3>地図リンク</h3>
+          <div class="link-list" id="helpMaps"></div>
+        </section>
+      </div>
+    </dialog>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

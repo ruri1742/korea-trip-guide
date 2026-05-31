@@ -1,0 +1,33 @@
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Local server / tool caches
+.cache/
+.parcel-cache/
+node_modules/
+
+# Personal travel files that should not be committed
+private/
+secrets/
+tickets/
+reservations/
+*.key
+*.pem
+*.env
+*.env.local
+
+# Generated archives
+*.zip
+*.7z
