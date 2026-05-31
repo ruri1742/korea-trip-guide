@@ -4,9 +4,11 @@ const state = {
 };
 
 const elements = {
-  modeButtons: document.querySelectorAll(".mode-button"),
+  modeButtons: document.querySelectorAll(".tab-button"),
   duringView: document.querySelector("#duringView"),
   beforeView: document.querySelector("#beforeView"),
+  currentStepCard: document.querySelector("#currentStepCard"),
+  focusLabel: document.querySelector("#focusLabel"),
   stepTime: document.querySelector("#stepTime"),
   stepTitle: document.querySelector("#stepTitle"),
   stepPlace: document.querySelector("#stepPlace"),
@@ -24,6 +26,15 @@ const elements = {
   openHelp: document.querySelector("#openHelp"),
   helpDialog: document.querySelector("#helpDialog")
 };
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 function toDateTime(step, timeKey) {
   return new Date(`${step.date}T${step[timeKey]}:00`);
@@ -72,19 +83,19 @@ function getFocusMessage(step) {
   const type = getStepType(step);
   if (type === "beforeRide") {
     return {
-      label: "強調",
+      label: "乗車前",
       text: "チケット、乗り場、目的地を先に確認。"
     };
   }
   if (type === "riding") {
     return {
-      label: "強調",
+      label: "乗車中",
       text: "チケットより、到着後の流れを軽く確認。"
     };
   }
   if (type === "arrival") {
     return {
-      label: "強調",
+      label: "到着後",
       text: "目的地名、住所、次の移動を見せられるようにする。"
     };
   }
@@ -97,36 +108,42 @@ function getFocusMessage(step) {
 function renderStep() {
   const step = steps[state.currentIndex];
   const focus = getFocusMessage(step);
+  const type = getStepType(step);
 
+  elements.currentStepCard.dataset.stepState = type;
+  elements.focusLabel.textContent = focus.label;
   elements.stepTime.textContent = `${formatDate(step.date)} ${step.start}-${step.end}`;
   elements.stepTitle.textContent = step.title;
   elements.stepPlace.textContent = step.place;
   elements.stepDescription.textContent = step.description;
-  elements.focusBox.innerHTML = `<span>${focus.label}</span><p>${focus.text}</p>`;
+  elements.focusBox.innerHTML = `<p>${escapeHtml(focus.text)}</p><small>${escapeHtml(step.miniInfo)}</small>`;
   elements.actionList.innerHTML = step.actions
-    .map((action) => `<div class="action-item">${action}</div>`)
+    .map((action) => `<div class="action-item">${escapeHtml(action)}</div>`)
     .join("");
-  elements.linkList.innerHTML = renderLinks(step.links);
+  elements.linkList.innerHTML = renderLinks(step.links, "primary");
   elements.nextSummary.textContent = step.nextSummary;
   elements.prevStep.disabled = state.currentIndex === 0;
   elements.nextStep.disabled = state.currentIndex === steps.length - 1;
 }
 
-function renderLinks(links) {
+function renderLinks(links, importance = "secondary") {
+  const className = importance === "primary" ? "button button--primary" : "button button--secondary";
   return links
-    .map((link) => `<a class="link-button" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`)
+    .map((link) => {
+      return `<a class="${className}" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`;
+    })
     .join("");
 }
 
 function renderBeforeTrip() {
   document.querySelector("#checklist").innerHTML = preTrip.checklist
-    .map((item) => `<li><span></span>${item}</li>`)
+    .map((item) => `<li><span aria-hidden="true"></span>${escapeHtml(item)}</li>`)
     .join("");
   document.querySelector("#undecidedList").innerHTML = preTrip.undecided
-    .map((item) => `<li>${item}</li>`)
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("");
   document.querySelector("#shareList").innerHTML = preTrip.share
-    .map((item) => `<li>${item}</li>`)
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("");
   document.querySelector("#ticketLinks").innerHTML = renderLinks(preTrip.ticketLinks);
 }
@@ -137,9 +154,9 @@ function renderSchedule() {
       const activeClass = index === state.currentIndex ? " active" : "";
       return `
         <button class="schedule-item${activeClass}" type="button" data-step-index="${index}">
-          <span>${formatDate(step.date)} ${step.start}</span>
-          <strong>${step.title}</strong>
-          <small>${step.place}</small>
+          <span>${escapeHtml(formatDate(step.date))} ${escapeHtml(step.start)}</span>
+          <strong>${escapeHtml(step.title)}</strong>
+          <small>${escapeHtml(step.place)}</small>
         </button>
       `;
     })
@@ -150,10 +167,10 @@ function renderHelp() {
   document.querySelector("#hotelName").textContent = helpInfo.hotel.name;
   document.querySelector("#hotelAddress").textContent = helpInfo.hotel.address;
   document.querySelector("#destinations").innerHTML = helpInfo.koreanDestinations
-    .map((item) => `<div><span>${item.label}</span><strong>${item.text}</strong></div>`)
+    .map((item) => `<div><span>${escapeHtml(item.label)}</span><strong>${escapeHtml(item.text)}</strong></div>`)
     .join("");
   document.querySelector("#phrases").innerHTML = helpInfo.phrases
-    .map((item) => `<div><span>${item.ja}</span><strong>${item.ko}</strong></div>`)
+    .map((item) => `<div><span>${escapeHtml(item.ja)}</span><strong>${escapeHtml(item.ko)}</strong></div>`)
     .join("");
   document.querySelector("#helpTickets").innerHTML = renderLinks(helpInfo.tickets);
   document.querySelector("#helpMaps").innerHTML = renderLinks(helpInfo.maps);
@@ -162,7 +179,9 @@ function renderHelp() {
 function setMode(mode) {
   state.mode = mode;
   elements.modeButtons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.mode === mode);
+    const isActive = button.dataset.mode === mode;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
   });
   elements.duringView.classList.toggle("active", mode === "during");
   elements.beforeView.classList.toggle("active", mode === "before");
